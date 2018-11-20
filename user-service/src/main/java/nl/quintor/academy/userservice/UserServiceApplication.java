@@ -1,13 +1,16 @@
 package nl.quintor.academy.userservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 
+import static org.springframework.web.reactive.function.BodyExtractors.toMono;
+import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -18,8 +21,20 @@ public class UserServiceApplication {
         SpringApplication.run(UserServiceApplication.class, args);
     }
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Bean
     RouterFunction<ServerResponse> getUsers() {
-        return route(GET("/users"), serverRequest -> ok().body(Flux.just("Dennis", "Nico", "Tom", "Niek", "Jeroen"), String.class));
+        return
+                route(GET("/users"),
+                        request -> ok().body(
+                                userRepository.findAll(), User.class))
+                        .and(
+                                route(POST("/users"),
+                                        request -> request.body(toMono(User.class))
+                                                .doOnNext(user -> userRepository.save(user).subscribe())
+                                                .then(ok().build())))
+                        .and(route(DELETE("/users"), request -> userRepository.deleteAll().then(ok().build())));
     }
 }

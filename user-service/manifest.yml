@@ -7,3 +7,5 @@ applications:
   path: target/user-service-0.0.1-SNAPSHOT.jar
   env:
     JBP_CONFIG_OPEN_JDK_JRE: '{jre: { version: 11.0.1_+ }}'
+  services:
+  - user-database
