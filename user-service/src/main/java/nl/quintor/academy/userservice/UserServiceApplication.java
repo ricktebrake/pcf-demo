@@ -14,12 +14,12 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @SpringBootApplication
 public class UserServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(UserServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+    }
 
-	@Bean
-	RouterFunction<ServerResponse> getUsers() {
-		return route(GET("/users"), serverRequest -> ok().body(Flux.just("Rick", "Thom", "Sven"), String.class));
-	}
+    @Bean
+    RouterFunction<ServerResponse> getUsers() {
+        return route(GET("/users"), serverRequest -> ok().body(Flux.just("Dennis", "Nico", "Tom", "Niek", "Jeroen"), String.class));
+    }
 }
