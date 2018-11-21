@@ -9,5 +9,6 @@ applications:
     JBP_CONFIG_OPEN_JDK_JRE: '{jre: { version: 11.0.1_+ }}'
   services:
   - user-database
+  - service-registry
   health-check-type: http
   health-check-http-endpoint: /actuator/health
